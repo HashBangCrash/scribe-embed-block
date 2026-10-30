@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Scribe Embed Block
  * Description: Adds a Gutenberg block for embedding Scribe guides using validated Scribe URLs.
- * Version: 1.1.0
+ * Version: 1.2.0
  * Requires at least: 6.3
  * Requires PHP: 7.4
  * Author: Stephen Schrauger
@@ -50,7 +50,7 @@ function scribe_embed_block_register()
             'editor_script' => 'scribe-embed-block-editor',
             'editor_style' => 'scribe-embed-block-editor-style',
             'render_callback' => __NAMESPACE__ . '\\scribe_embed_block_render',
-            
+
             'attributes' => array(
                 'url' => array(
                     'type' => 'string',
@@ -80,9 +80,9 @@ function scribe_embed_block_register()
                     'type' => 'string',
                     'default' => '16 / 12',
                 ),
-                'allowFullscreen' => array(
+                'prohibitFullscreen' => array(
                     'type' => 'boolean',
-                    'default' => true,
+                    'default' => false,
                 ),
                 'lazyLoad' => array(
                     'type' => 'boolean',
@@ -421,9 +421,9 @@ function scribe_embed_block_render($attributes)
         ? 'lazy'
         : 'eager';
 
-    $fullscreen = !empty($attributes['allowFullscreen'])
-        ? ' allow="fullscreen" allowfullscreen'
-        : '';
+    $fullscreen = !empty($attributes['prohibitFullscreen'])
+        ? ''
+        : ' allow="fullscreen" allowFullscreen';
 
     $wrapper_attributes = get_block_wrapper_attributes(
         array(

@@ -22,3 +22,31 @@
 	color: #646970;
 	font-size: 12px;
 }
+
+.scribe-embed-editor__preview {
+	margin-top: 1rem;
+}
+
+.scribe-embed-editor__preview-heading {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	margin-bottom: 0.75rem;
+}
+
+.scribe-embed-editor__preview-heading span {
+	font-size: 12px;
+	color: #50575e;
+}
+
+.scribe-embed-editor__preview-frame {
+	width: 100%;
+	overflow: hidden;
+	background: #fff;
+	border: 1px solid #dcdcde;
+}
+
+.scribe-embed-editor__preview-frame iframe {
+	display: block;
+	max-width: 100%;
+}
