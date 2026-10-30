@@ -18,6 +18,63 @@
 	var Notice = wp.components.Notice;
 	var Button = wp.components.Button;
 
+	function normalizeScribeUrl(value) {
+		var input = String(value || '').trim();
+
+		if (!input) {
+			return '';
+		}
+
+		// If the editor pasted the complete iframe embed code,
+		// extract the src attribute.
+		var iframeMatch = input.match(
+			/<iframe\b[^>]*\bsrc\s*=\s*(["'])(.*?)\1/i
+		);
+
+		if (iframeMatch) {
+			input = iframeMatch[2].replace(/&amp;/g, '&');
+		}
+
+		try {
+			var url = new URL(input);
+
+			// Only accept HTTPS Scribe URLs.
+			if (
+				url.protocol !== 'https:' ||
+				!['scribehow.com', 'www.scribehow.com'].includes(url.hostname) ||
+				url.port ||
+				url.username ||
+				url.password
+			) {
+				return '';
+			}
+
+			var match;
+
+			// Standard embed, embed-preview, viewer, and shared URLs.
+			match = url.pathname.match(
+				/^\/(?:embed|embed-preview|viewer|shared)\/([^/]+)\/?$/
+			);
+
+			// Scribe share URLs.
+			if (!match) {
+				match = url.pathname.match(
+					/^\/o\/[^/]+\/viewer\/([^/]+)\/?$/
+				);
+			}
+
+			if (!match) {
+				return '';
+			}
+
+			// Always return the canonical embed URL.
+			return 'https://scribehow.com/embed/' + match[1];
+
+		} catch (error) {
+			return '';
+		}
+	}
+
 	/**
 	 * Validate Scribe URLs before accepting them in the editor.
 	 *
@@ -519,7 +576,7 @@
 						label: __('Scribe URL', 'scribe-embed-block'),
 
 						help: __(
-							'Paste a Scribe viewer/share URL or its /embed/ URL.',
+							'Paste a Scribe share URL, embed URL, preview URL, or iframe embed code.',
 							'scribe-embed-block'
 						),
 
@@ -528,6 +585,14 @@
 
 						onChange: function (value) {
 							setAttributes({ url: value });
+						},
+
+						onBlur: function () {
+							var normalizedUrl = normalizeScribeUrl(attributes.url);
+
+							if (normalizedUrl && normalizedUrl !== attributes.url) {
+								setAttributes({ url: normalizedUrl });
+							}
 						}
 					}),
 

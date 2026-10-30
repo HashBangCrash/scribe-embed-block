@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Scribe Embed Block
  * Description: Adds a Gutenberg block for embedding Scribe guides using validated Scribe URLs.
- * Version: 1.2.0
+ * Version: 1.3.0
  * Requires at least: 6.3
  * Requires PHP: 7.4
  * Author: Stephen Schrauger
